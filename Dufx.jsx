@@ -43,7 +43,6 @@
 		along with Duik. If not, see <http://www.gnu.org/licenses/>.
 */
 
-if (typeof Duik == 'object') delete Duik;
 #include libduik.jsxinc
 
 /**
@@ -212,6 +211,58 @@ if (typeof Duik == 'object') delete Duik;
 	 * This block constructs and intializes the UI
 	 */
 	{
+		// Load images
+		function checkFile(name, content)
+		{
+			var file = new File(name);
+			var fileContent = '';
+			if (file.exists)
+			{
+				file.encoding = 'BINARY';
+				if (file.open('r', 'TEXT', '????'))
+				{
+					fileContent = file.read();
+
+					file.close();
+				}
+			}
+			else
+			{
+				var folder = new Folder(file.path);
+				if (!folder.exists)
+				{
+					folder.create();
+				}
+			}
+			var success = fileContent == content;
+			if (!success)
+			{
+				file.encoding = 'BINARY';
+				if (file.open('w'))
+				{
+					success = file.write(content);
+					file.close();
+				}
+			}
+			return success;
+		}
+
+		#include Dufx_images.jsxinc
+
+		var duFolder = new Folder(Folder.userData.fsName + '/Duduf');
+		if (!duFolder.exists) duFolder.create();
+		var imgFolder = new Folder(duFolder.fsName + '/DuFX').fsName;
+		for (var k in scriptMng.files)
+		{
+			if (scriptMng.files.hasOwnProperty(k))
+			{
+				if (!checkFile(imgFolder + k, scriptMng.files[k]))
+				{
+					alert(tr("Error writing file: ") + k);
+				}
+			}
+		}
+
 		// Create the UI Main Palette
 		var mainPalette = Duik.ui.createUI(thisObj,scriptName);
 
@@ -224,9 +275,8 @@ if (typeof Duik == 'object') delete Duik;
 		headerGroup.orientation = 'row';
 		headerGroup.alignment = ['center','top'];
 
-		var refreshButton = headerGroup.add('button',undefined,"Refresh list");
-		refreshButton.alignment = ['fill','fill'];
-		refreshButton.helpTip = "Refresh the effects list";
+		var refreshButton = Duik.ui.addImageButton(headerGroup,'',imgFolder + '/' + 'refresh.png',"Reload effect list",imgFolder + '/' + 'refresh_o.png');
+		refreshButton.group.alignment = ['fill','fill'];
 
 		var selectorsForm = Duik.ui.addForm(headerGroup);
 		selectorsForm.alignment = ['fill','top'];
@@ -238,10 +288,8 @@ if (typeof Duik == 'object') delete Duik;
 		var searchGroup = mainPalette.add('group');
 		searchGroup.alignment = ['fill','top'];
 
-		var searchButton = searchGroup.add('button',undefined,"S");
-		searchButton.helpTip = "Search!";
-		searchButton.alignment = ['left','fill'];
-		searchButton.maximumSize.width = 18;
+		var searchButton = Duik.ui.addImageButton(searchGroup,'',imgFolder + '/' + 'search.png',"Search effect (using its name)",imgFolder + '/' + 'search_o.png');
+		searchButton.group.alignment = ['left','top'];
 
 		var searchFieldGroup = searchGroup.add('group');
 		searchFieldGroup.orientation = 'column';
@@ -254,10 +302,8 @@ if (typeof Duik == 'object') delete Duik;
 		caseButton.alignment = ['left','top'];
 		caseButton.value = false;
 
-		var resetSearchButton = searchGroup.add('button',undefined,'X');
-		resetSearchButton.helpTip = "Reset Search";
-		resetSearchButton.alignment = ['right','fill'];
-		resetSearchButton.maximumSize.width = 18;
+		var resetSearchButton = Duik.ui.addImageButton(searchGroup,'',imgFolder + '/' + 'cancel.png',"Reset search",imgFolder + '/' + 'cancel_o.png');
+		resetSearchButton.group.alignment = ['right','top'];
 
 		// add the table. Column headers do not work on CS5
 		var effectsList;
