@@ -290,6 +290,7 @@
 
 		var searchButton = Duik.ui.addImageButton(searchGroup,'',imgFolder + '/' + 'search.png',"Search effect (using its name)",imgFolder + '/' + 'search_o.png');
 		searchButton.group.alignment = ['left','top'];
+		searchButton.group.margins = [4,4,0,0];
 
 		var searchFieldGroup = searchGroup.add('group');
 		searchFieldGroup.orientation = 'column';
@@ -304,6 +305,7 @@
 
 		var resetSearchButton = Duik.ui.addImageButton(searchGroup,'',imgFolder + '/' + 'cancel.png',"Reset search",imgFolder + '/' + 'cancel_o.png');
 		resetSearchButton.group.alignment = ['right','top'];
+		resetSearchButton.group.margins = [0,4,4,0];
 
 		// add the table. Column headers do not work on CS5
 		var effectsList;
