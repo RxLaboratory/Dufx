@@ -1,4 +1,3 @@
-Dufx
-====
+# Dufx
 
-Duduf FX Manager for After Effects
+This repo has been moved to [Codeberg](https://codeberg.org/RxLaboratory/Dufx)!
